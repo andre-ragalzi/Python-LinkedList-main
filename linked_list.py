@@ -1,6 +1,6 @@
 """
 About:
-    2022/01/20 - Python LinkedList - V.0.2.0 - Gefit UTW - A.Ragalzi
+    2022/01/20 - Python LinkedList - V.0.2.0 - A.Ragalzi
 Description:
    Module that implement singly linked list in Python
 Function:
