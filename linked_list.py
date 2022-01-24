@@ -278,9 +278,4 @@ class LinkedList:
 
 
 if __name__ == '__main__':
-    llist1 = LinkedList(0, 1, 2, 3)
-    print(llist1)
-    llist1.insert(2, 99)
-    print(llist1)
-    llist1.insert(0, 100)
-    print(llist1)
+    pass
