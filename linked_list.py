@@ -1,217 +1,286 @@
 """
 About:
-    2022/01/19 - Python LinkedList - V.0.1.0 - Gefit UTW - A.Ragalzi
+    2022/01/20 - Python LinkedList - V.0.2.0 - Gefit UTW - A.Ragalzi
 Description:
    Module that implement singly linked list in Python
+Function:
+    None
 Class:
-    LinkedList
-    Method:
+    Node Method:
+        @property
+        data(self) -> any
+        @property
+        next_node(self) -> Node | None
+        @data.setter
+        data(self, data: any) -> None
+        @next_node.setter
+        next_node(self, next_node: Node = None) -> None
+    LinkedList Method:
         clear(self) -> None
-        delete_by_data(self, data: any) -> None
         delete_by_index(self, pos: int) -> None
-        delete_by_node(self, target_node: any) -> None
+        delete_by_node(self, target_node: Node) -> None
+        delete_by_value(self, data: any) -> None
         delete_head(self) -> None
         delete_tail(self) -> None
-        get_data(self) -> any
-        get_next(self) -> LinkedList | None
-        has_next(self) -> bool
+        @property
+        head(self) -> Node | None
+        @head.setter
+        head(self, head: Node | None) -> None
         insert(self, pos: int, data: any) -> None
         insert_head(self, data: any) -> None
         insert_tail(self, data: any) -> None
-        set_data(self, data) -> None
-        set_next(self, next) -> None
-Function:
-    get_linked_list(data: list) -> LinkedList
+        @property
+        lenght(self) -> int
+        @lenght.setter
+        lenght(self, lenght: int) -> None
 """
 
 from __future__ import annotations
 
-import copy
+
 from typing import Generator
 
 
-def linked_list(data: list) -> LinkedList:
-    """Return a linked list from a list"""
-    if len(data) == 0:
-        return LinkedList()
-    else:
-        head = LinkedList()
-        head.set_data(data[0])
-        node = head
-        for value in data[1:]:
-            new_node = LinkedList()
-            new_node.set_data(value)
-            node.set_next(new_node)
-            node = node.get_next()
-    return head
+class Node:
+    """Class that represents a node of a linked list"""
+
+    def __init__(self, data: any = None):
+        self.__data = data
+        self.__next_node = None
+
+    def __eq__(self, target_node: Node) -> bool:
+        if isinstance(target_node, Node):
+            if self.data == target_node.data:
+                return True
+        return False
+
+    def __repr__(self):
+        return 'Node()'
+
+    def __str__(self):
+        return f'data: {self.data}, next_node: {self.next_node}'
+
+    @property
+    def data(self) -> any:
+        return self.__data
+
+    @property
+    def next_node(self) -> Node | None:
+        return self.__next_node
+
+    @data.setter
+    def data(self, data: any) -> None:
+        self.__data = data
+
+    @next_node.setter
+    def next_node(self, next_node: Node = None) -> None:
+        self.__next_node = next_node
 
 
 class LinkedList:
     """Class that represents a singly linked list"""
+    __lenght = 0
 
-    def __init__(self) -> None:
-        self.__data = None
-        self.__next = None
+    def __init__(self, *values: any):
+        if len(values) == 0:
+            self.head = None
+        else:
+            current = Node(values[0])
+            self.head = current
+            self.lenght = self.lenght + 1
+            for data in values[1:]:
+                current.next_node = Node(data)
+                current = current.next_node
+                self.lenght = self.lenght + 1
 
     def __iter__(self) -> Generator[any, None, None]:
-        node = self
-        while node is not None:
-            yield node.get_data()
-            node = node.get_next()
+        current = self.head
+        while current is not None:
+            yield current.data
+            current = current.next_node
 
-    def __eq__(self, target_list: LinkedList) -> bool:
-        if isinstance(target_list, LinkedList):
-            if self.get_data() == target_list.get_data():
-                if self.get_next() == target_list.get_next():
-                    return True
-        return False
+    def __eq__(self, target_llist: LinkedList) -> bool:
+        res = False
+        if isinstance(target_llist, LinkedList):
+            if len(self) == len(target_llist):
+                res = True
+                for node1, node2 in zip(self, target_llist):
+                    if node1 != node2:
+                        res = False
+                        break
+        return res
 
     def __len__(self) -> int:
-        count = 0
-        node = self
-        while 1:
-            count += 1
-            if node.get_next() is None:
-                break
-            node = node.get_next()
-        return count
+        return self.__lenght
 
-    def __repr__(self) -> LinkedList:
+    def __repr__(self):
         return 'LinkedList()'
 
-    def __str__(self) -> str:
-        str_node = str(self.get_data())
-        node = self
-        while node.get_next() is not None:
-            node = node.get_next()
-            str_node = f'{str_node} -> {node.get_data()}'
-        return str_node
+    def __str__(self):
+        str_linked_list = ''
+        current = self.head
+        while current is not None:
+            str_linked_list += f'{current.data} -> '
+            current = current.next_node
+        return str_linked_list[:-4]
 
     def clear(self) -> None:
-        """Remove all nodes"""
-        self.set_data(None)
-        self.set_next(None)
-
-    def delete_by_data(self, data: any) -> None:
-        """Delete first occurence of a node with a specific value of data"""
-        if self.get_data() == data:
-            self.delete_head()
-        else:
-            node = self
-            while node.get_next() is not None:
-                if node.get_next().get_data() == data:
-                    node.set_next(node.get_next().get_next())
-                    break
-                node = node.get_next()
+        """Empty the linked list"""
+        self.head = None
+        self.lenght = 0
 
     def delete_by_index(self, pos: int) -> None:
-        """
-        Delete a node in a specific position"""
-        if pos < 0 or pos >= len(self):
-            pass
-        elif pos == 0:
-            self.delete_head()
-        elif pos == len(self):
-            self.delete_tail()
-        else:
-            node = self
-            count = 0
-            while node.get_next() is not None:
-                if pos-1 == count:
-                    node.set_next(node.get_next().get_next())
-                    break
-                node = node.get_next()
-                count += 1
+        """Delete a node in a specific position"""
+        if len(self) == 0:
+            raise ValueError('linked list is empty')
+        if pos < 0 or pos > len(self):
+            raise ValueError('pos doesn\'t exists')
+        count = 0
+        current = self.head
+        previous = self.head
+        while current is not None or count < pos:
+            if count == pos:
+                if pos == 0:
+                    self.delete_head()
+                else:
+                    previous.next_node = current.next_node
+                    self.lenght = self.lenght - 1
+                break
+            else:
+                previous = current
+                current = current.next_node
+            count += 1
 
-    def delete_by_node(self, target_node: any) -> None:
-        """Delete first occurence of a specific node"""
-        if self == target_node:
+    def delete_by_node(self, target_node: Node) -> None:
+        """Delete a node by node"""
+        if not isinstance(target_node, Node):
+            raise TypeError('node must be a Node')
+        if len(self) == 0:
+            raise ValueError('linked list is empty')
+        current = self.head
+        previous = None
+        found = False
+        while not found:
+            if current == target_node:
+                found = True
+            elif current is None:
+                raise ValueError('node not found in linked list')
+            else:
+                previous = current
+                current = current.next_node
+        if previous is None:
+            self.head = current.next_node
+        else:
+            previous.next_node = current.next_node
+        self.lenght = self.lenght - 1
+
+    def delete_by_value(self, data: any) -> None:
+        """Delete a node by data"""
+        if len(self) == 0:
+            raise ValueError('linked list is empty')
+        current = self.head
+        previous = self.head
+        found = False
+        if current.data == data:
+            found = True
             self.delete_head()
         else:
-            node = self
-            while node.get_next() is not None:
-                if node.get_next() == target_node:
-                    node.set_next(node.get_next().get_next())
+            while current is not None:
+                if current.data == data:
+                    previous.next_node = current.next_node
+                    self.lenght = self.lenght - 1
+                    found = True
                     break
-                node = node.get_next()
+                else:
+                    previous = current
+                    current = current.next_node
+        if not found:
+            raise ValueError('value not found in linked list')
 
     def delete_head(self) -> None:
-        """Delete the head"""
-        if len(self) == 1:
-            return
-        self.__class__ = self.__next.__class__
-        self.__dict__ = self.__next.__dict__
+        """Delete head"""
+        if len(self) == 0:
+            raise ValueError('linked list is empty')
+        else:
+            self.head = self.head.next_node
+            self.lenght = self.lenght - 1
 
     def delete_tail(self) -> None:
-        """Delete the tail"""
-        if len(self) == 2:
-            if self.__next.next is None:
-                self.__next = None
+        """Delete tail"""
+        if len(self) == 0:
+            raise ValueError('linked list is empty')
         else:
-            node = self
-            while 1:
-                node = node.get_next()
-                if node.get_next().next is None:
-                    node.set_next(None)
-                    break
+            current = self.head
+            previous = self.head
+            while current.next_node is not None:
+                previous = current
+                current = current.next_node
+            previous.next_node = None
+            self.lenght = self.lenght - 1
 
-    def get_data(self) -> any:
-        """Get data field of the node"""
-        return self.__data
+    @property
+    def head(self) -> Node | None:
+        return self.__head
 
-    def get_next(self) -> LinkedList | None:
-        """Get next field of the node"""
-        return self.__next
-
-    def has_next(self) -> bool:
-        """Return True if the node points to another node"""
-        return self.__next is not None
+    @head.setter
+    def head(self, head: Node | None) -> None:
+        self.__head = head
 
     def insert(self, pos: int, data: any) -> None:
-        """
-        Insert a new node in a specific position."""
-        if pos < 0 or pos >= len(self):
-            pass
+        """Insert a new node in a specific pos."""
+        if pos < -1 or pos > len(self):
+            raise ValueError('pos out of linked list range')
         elif pos == 0:
             self.insert_head(data)
-        elif pos == len(self):
-            self.insert_tail(data)
         else:
-            node = self
+            new_node = Node()
+            new_node.data = data
+            current = self.head
             count = 0
-            while node.get_next() is not None:
-                node = node.get_next()
-                if pos-1 == count:
-                    tmp = copy.deepcopy(node)
-                    node.set_data(data)
-                    node.set_next(tmp)
-                    break
+            while count < pos-1:
+                current = current.next_node
                 count += 1
+            new_node.next_node = current.next_node
+            current.next_node = new_node
+            self.lenght = self.lenght + 1
 
     def insert_head(self, data: any) -> None:
         """Insert a new head"""
-        new_node = LinkedList()
-        new_node.set_data(data)
-        new_node.set_next(copy.deepcopy(self))
-        self.__class__ = new_node.__class__
-        self.__dict__ = new_node.__dict__
+        new_node = Node()
+        new_node.data = data
+        if len(self) == 0:
+            self.head = new_node
+        else:
+            new_node.next_node = self.head
+            self.head = new_node
+        self.lenght = self.lenght + 1
 
     def insert_tail(self, data: any) -> None:
         """Insert a new tail"""
-        node = self
-        while node.get_next() is not None:
-            node = node.get_next()
-        node.set_next(LinkedList())
-        node.get_next().set_data(data)
+        if len(self) == 0:
+            self.insert_head(data)
+        else:
+            new_node = Node()
+            new_node.data = data
+            current = self.head
+            while current.next_node is not None:
+                current = current.next_node
+            current.next_node = new_node
+            self.lenght = self.lenght + 1
 
-    def set_data(self, data) -> None:
-        """Set data field of the node"""
-        self.__data = data
+    @property
+    def lenght(self) -> int:
+        return self.__lenght
 
-    def set_next(self, next) -> None:
-        """Set next field of the node"""
-        self.__next = next
+    @lenght.setter
+    def lenght(self, lenght: int) -> None:
+        self.__lenght = lenght
 
 
 if __name__ == '__main__':
-    pass
+    llist1 = LinkedList(0, 1, 2, 3)
+    print(llist1)
+    llist1.insert(2, 99)
+    print(llist1)
+    llist1.insert(0, 100)
+    print(llist1)
