@@ -62,18 +62,22 @@ class Node:
 
     @property
     def data(self) -> any:
+        """Get data"""
         return self.__data
 
     @property
     def next_node(self) -> Node | None:
+        """Get next node"""
         return self.__next_node
 
     @data.setter
     def data(self, data: any) -> None:
+        """Set data"""
         self.__data = data
 
     @next_node.setter
     def next_node(self, next_node: Node = None) -> None:
+        """Set next node"""
         self.__next_node = next_node
 
 
@@ -220,10 +224,12 @@ class LinkedList:
 
     @property
     def head(self) -> Node | None:
+        """Get head"""
         return self.__head
 
     @head.setter
     def head(self, head: Node | None) -> None:
+        """Set head"""
         self.__head = head
 
     def insert(self, pos: int, data: any) -> None:
@@ -270,10 +276,12 @@ class LinkedList:
 
     @property
     def lenght(self) -> int:
+        """Get lenght"""
         return self.__lenght
 
     @lenght.setter
     def lenght(self, lenght: int) -> None:
+        """Set lenght"""
         self.__lenght = lenght
 
 
