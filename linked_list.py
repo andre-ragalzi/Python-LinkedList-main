@@ -33,12 +33,47 @@ Class:
         lenght(self) -> int
         @lenght.setter
         lenght(self, lenght: int) -> None
+Function:
+    insert_linked_list(llist1: LinkedList, llist2: LinkedList) -> None
 """
 
 from __future__ import annotations
 
-
 from typing import Generator
+
+
+def insert_linked_list(llist1: LinkedList, llist2: LinkedList) -> None:
+    """Insert llist2 in llist1
+
+    Args:
+        llist1 (LinkedList): linked list to extend
+        llist2 (LinkedList): linked list to insert
+
+    Example:
+        llist1 = 3 -> 4 -> 1 -> 7
+        llist2 = 4 -> 9 -> 0
+        insert_linked_list(llist1, llist2)
+        print(llist1)
+        ~ 3 -> 4 -> 9 -> 0-> 1 -> 7
+    """
+    if len(llist1) == 0 or len(llist1) == 0:
+        raise ValueError('linked list is empty')
+    current = llist1.head
+    found = False
+    i = 0
+    while current is not None:
+        if current.data == llist2.head.data:
+            for j, value in enumerate(llist2):
+                if j > 0:
+                    llist1.insert(i, value)
+                i += 1
+            found = True
+            break
+        else:
+            current = current.next_node
+            i += 1
+    if not found:
+        raise ValueError('value not found in linked list')
 
 
 class Node:
