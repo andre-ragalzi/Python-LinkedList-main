@@ -1,6 +1,6 @@
 """
 About:
-    2022/02/06 - Python LinkedList - V.22.2.0 - A.Ragalzi
+    2022/02/17 - Python LinkedList - V.22.2.1 - A.Ragalzi
 Description:
    Module that implement singly linked list in Python
 Function:
@@ -90,7 +90,7 @@ class Node:
         return False
 
     def __repr__(self):
-        return 'Node()'
+        return f'Node({self.data})'
 
     def __str__(self):
         return f'data: {self.data}, next_node: {self.next_node}'
@@ -153,15 +153,20 @@ class LinkedList:
         return self.__lenght
 
     def __repr__(self):
-        return 'LinkedList()'
+        repr_linked_list = ''
+        current = self.head
+        while current is not None:
+            repr_linked_list += f'{current.data}, '
+            current = current.next_node
+        return f'LinkedList({repr_linked_list[:-2]})'
 
     def __str__(self):
         str_linked_list = ''
         current = self.head
         while current is not None:
-            str_linked_list += f'{current.data} -> '
+            str_linked_list += f'{current.data}\n'
             current = current.next_node
-        return str_linked_list[:-4]
+        return str_linked_list[:-1]
 
     def clear(self) -> None:
         """Empty the linked list"""
